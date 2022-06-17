@@ -1429,7 +1429,7 @@ table.Tbl_sun4 th {
     border-width: 2px;
     padding: 10px 20px;
 }
-table.Tbl_sun4 td:first-child {
+/*table.Tbl_sun4 td:first-child {
     border-left: none;
 }
 table.Tbl_sun4 td:last-child {
@@ -1438,7 +1438,7 @@ table.Tbl_sun4 td:last-child {
 table.Tbl_sun4 tr:last-child th,
 table.Tbl_sun4 tr:last-child td {
     border-bottom: none;
-}
+}*/
 table.Tbl_sun4 td.TblTdLyt_sun4 img:first-child:last-child,
 table.Tbl_sun4 td.TblTdSel_sun4 input:first-child:last-child {
     display: block;
