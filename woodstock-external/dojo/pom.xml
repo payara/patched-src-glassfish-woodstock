@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.glassfish.woodstock.external</groupId>
         <artifactId>woodstock-external</artifactId>
-        <version>5.0.0.payara-p1</version>
+        <version>5.0.0.payara-p2-SNAPSHOT</version>
     </parent>
 
     <artifactId>dojo</artifactId>
