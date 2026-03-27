@@ -24,7 +24,7 @@
     <parent>
         <groupId>org.glassfish.woodstock.external</groupId>
         <artifactId>woodstock-external</artifactId>
-        <version>6.0.3.payara-p1</version>
+        <version>6.0.3.payara-p2-SNAPSHOT</version>
     </parent>
 
     <artifactId>prototype</artifactId>
