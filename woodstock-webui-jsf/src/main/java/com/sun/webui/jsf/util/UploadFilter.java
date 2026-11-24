@@ -1,6 +1,6 @@
 /*
  * Copyright (c) 2007, 2020 Oracle and/or its affiliates. All rights reserved.
- * Copyright (c) 2020 Payara Services Ltd.
+ * Copyright (c) 2020, 2026 Payara Services Ltd.
  *
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License v. 2.0, which is available at
@@ -81,6 +81,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
  * <li>{@code tmpDir} Use this directory to specify the directory to be
  * used for temporary storage of files. The default behaviour is to use the
  * directory specified in the system property "java.io.tmpdir". </li>
+ * <li>{@code fileCountMax} The maximum number of parts (files and form
+ * fields) allowed in a single multipart request. If negative, there is no
+ * maximum. The default value is 1000.</li>
  * </ul>  *
  */
 public final class UploadFilter implements Filter {
@@ -102,6 +105,18 @@ public final class UploadFilter implements Filter {
      * used for temporary storage of uploaded files.
      */
     public static final String TMP_DIR = "tmpDir";
+
+    /**
+     * The name of the filter init parameter used to specify the maximum
+     * number of parts allowed in a multipart request.
+     */
+    public static final String FILE_COUNT_MAX = "fileCountMax";
+
+    /**
+     * Max number of parts per request.
+     */
+    @SuppressWarnings("checkstyle:magicnumber")
+    private long fileCountMax = 1000;
 
     /**
      * Max upload size in byte.
@@ -177,6 +192,9 @@ public final class UploadFilter implements Filter {
             // limitation is enforced.
             // It is a big security hole to allow any file to be uploaded
             fu.setSizeMax(maxSize);
+
+            // Limit the number of parts to prevent DoS (CVE-2023-24998)
+            fu.setFileCountMax(fileCountMax);
 
             // files with names in other languages (like Japanese) are not
             // being uploaded with the proper names. Proper encoding has to
@@ -398,6 +416,18 @@ public final class UploadFilter implements Filter {
                 maxSize = Long.parseLong(param);
             } catch (NumberFormatException nfe) {
                 Object[] params = {MAX_SIZE, param};
+                String msg = MessageUtil.getMessage(MESSAGES,
+                        "Upload.invalidLong", params);
+                errorMessageBuffer.append(msg);
+            }
+        }
+        param = filterConfig.getInitParameter(FILE_COUNT_MAX);
+        if (param != null) {
+            try {
+                fileCountMax = Long.parseLong(param);
+            } catch (NumberFormatException nfe) {
+                Object[] params = {FILE_COUNT_MAX, param};
+                errorMessageBuffer.append(" ");
                 String msg = MessageUtil.getMessage(MESSAGES,
                         "Upload.invalidLong", params);
                 errorMessageBuffer.append(msg);
